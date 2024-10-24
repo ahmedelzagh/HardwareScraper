@@ -30,17 +30,27 @@ categories = {
 
 # Function to scrape product details from a given subcategory URL
 def scrape_products(subcategory_url):
-    response = requests.get(subcategory_url)
-    if response.status_code == 200:
-        soup = BeautifulSoup(response.content, 'html.parser')
-        products = []
+    products = []
+    page = 1
 
-        # Find product items based on the provided HTML structure
+    while True:
+        response = requests.get(f"{subcategory_url}&page={page}")
+        if response.status_code != 200:
+            print(f"Failed to load {subcategory_url}&page={page} with status code {response.status_code}")
+            break
+
+        soup = BeautifulSoup(response.content, 'html.parser')
         product_items = soup.find_all('div', class_='product-layout')
+
+        if not product_items:
+            print(f"No products found on {subcategory_url}&page={page}")
+            break
 
         for item in product_items:
             name = item.find('a', title=True).get('title', '').strip()
+            product_url = item.find('a', title=True).get('href', '').strip()
             price = item.find('span', class_='price-new').get_text(strip=True)
+            image_url = item.find('img', class_='img-1').get('src', '').strip()
 
             # Check stock status
             add_to_cart_button = item.find('button', class_='addToCart')
@@ -51,14 +61,15 @@ def scrape_products(subcategory_url):
 
             products.append({
                 'name': name,
+                'product_url': product_url,
                 'price': price,
+                'image_url': image_url,
                 'stock_status': stock_status,
             })
 
-        return products
-    else:
-        print(f"Failed to load {subcategory_url}")
-        return []
+        page += 1
+
+    return products
 
 # Main function to loop over all categories and subcategories
 def scrape_all_categories():
@@ -84,6 +95,9 @@ scraped_data = scrape_all_categories()
 
 # Convert the scraped data to a DataFrame
 df = pd.DataFrame(scraped_data)
+
+# Reorder the DataFrame columns
+df = df[['category', 'subcategory', 'name', 'product_url', 'price', 'image_url', 'stock_status']]
 
 # Save the DataFrame to an Excel file
 df.to_excel('scraped_products.xlsx', index=False)
