@@ -1,6 +1,7 @@
 import requests
 from bs4 import BeautifulSoup
 import pandas as pd
+import time
 
 # Base URL for categories
 base_url = 'https://sigma-computer.com/subcategory'
@@ -32,11 +33,22 @@ categories = {
 def scrape_products(subcategory_url):
     products = []
     page = 1
+    max_retries = 3
+    retry_delay = 5  # seconds
 
     while True:
-        response = requests.get(f"{subcategory_url}&page={page}")
+        for attempt in range(max_retries):
+            response = requests.get(f"{subcategory_url}&page={page}")
+            if response.status_code == 200:
+                break
+            elif response.status_code == 524:
+                print(f"Timeout error on {subcategory_url}&page={page}. Retrying in {retry_delay} seconds...")
+                time.sleep(retry_delay)
+            else:
+                print(f"Failed to load {subcategory_url}&page={page} with status code {response.status_code}")
+                return products
+
         if response.status_code != 200:
-            print(f"Failed to load {subcategory_url}&page={page} with status code {response.status_code}")
             break
 
         soup = BeautifulSoup(response.content, 'html.parser')
