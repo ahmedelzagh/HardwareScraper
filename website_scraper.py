@@ -16,8 +16,9 @@ class WebsiteScraper:
         last_product_count = 0
         consecutive_timeouts = 0
         max_consecutive_timeouts = 3  # Stop after 3 consecutive timeouts
+        max_pages = 20  # Set a maximum number of pages to scrape
 
-        while True:
+        while page <= max_pages:
             for attempt in range(max_retries):
                 try:
                     print(f"Requesting {subcategory_url}?page={page}")
@@ -47,7 +48,7 @@ class WebsiteScraper:
             product_items = self.extract_product_items(soup, website)
 
             if not product_items:
-                print(f"No products found on {subcategory_url}?page={page}")
+                print(f"No products found on {subcategory_url}?page={page}. Exiting loop.")
                 break
 
             for item in product_items:
