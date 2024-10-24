@@ -44,6 +44,11 @@ class WebsiteScraper:
                     print(f"Error processing item on {subcategory_url}?page={page}: {e}")
                     continue
 
+            # Check if there is a next page link/button
+            next_page = soup.find('a', {'rel': 'next'})
+            if not next_page:
+                break
+
             page += 1
 
         return products
