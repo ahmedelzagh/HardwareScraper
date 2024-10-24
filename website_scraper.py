@@ -19,20 +19,26 @@ class WebsiteScraper:
 
         while True:
             for attempt in range(max_retries):
-                response = requests.get(f"{subcategory_url}?page={page}")
-                if response.status_code == 200:
-                    consecutive_timeouts = 0  # Reset timeout counter on success
-                    break
-                elif response.status_code == 524:
-                    print(f"Timeout error on {subcategory_url}?page={page}. Retrying in {retry_delay} seconds...")
-                    time.sleep(retry_delay)
-                    consecutive_timeouts += 1
-                    if consecutive_timeouts >= max_consecutive_timeouts:
-                        print(f"Stopping due to {max_consecutive_timeouts} consecutive timeouts on {subcategory_url}?page={page}")
+                try:
+                    print(f"Requesting {subcategory_url}?page={page}")
+                    response = requests.get(f"{subcategory_url}?page={page}", timeout=10)
+                    if response.status_code == 200:
+                        consecutive_timeouts = 0  # Reset timeout counter on success
+                        break
+                    elif response.status_code == 524:
+                        print(f"Timeout error on {subcategory_url}?page={page}. Retrying in {retry_delay} seconds...")
+                        time.sleep(retry_delay)
+                        consecutive_timeouts += 1
+                        if consecutive_timeouts >= max_consecutive_timeouts:
+                            print(f"Stopping due to {max_consecutive_timeouts} consecutive timeouts on {subcategory_url}?page={page}")
+                            return products
+                    else:
+                        print(f"Failed to load {subcategory_url}?page={page} with status code {response.status_code}")
                         return products
-                else:
-                    print(f"Failed to load {subcategory_url}?page={page} with status code {response.status_code}")
-                    return products
+                except requests.exceptions.RequestException as e:
+                    print(f"Request exception on {subcategory_url}?page={page}: {e}")
+                    time.sleep(retry_delay)
+                    continue
 
             if response.status_code != 200:
                 break
@@ -54,10 +60,12 @@ class WebsiteScraper:
 
             # Check if the number of products has increased
             if len(products) == last_product_count:
+                print(f"No new products found on {subcategory_url}?page={page}. Exiting loop.")
                 break
 
             last_product_count = len(products)
             page += 1
+            print(f"Moving to next page: {page}")
 
         return products
 
