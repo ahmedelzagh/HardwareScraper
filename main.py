@@ -2,44 +2,21 @@ import pandas as pd
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from scraper_factory import ScraperFactory
 
-base_categories = {
-    'Motherboard': 'motherboards',
-    'Processor': 'processors',
-    'RAM': 'ram',
-    'SSD': 'ssd',
-    'HDD': 'hdd',
-    'Graphics Card': 'graphics-card',
-    'Cases': 'cases',
-    'Power Supply': 'power-supply',
-    'Fans & Coolers': 'fans-coolers',
-    'Monitors': 'monitors',
-    'Accessories': 'accessories',
-    'Bundles': 'bundeles'
-}
-
 websites = [
-    {'base_url': 'https://sigma-computer.com/subcategory', 'store_name': 'Sigma Computer', 'categories': {
-        'Desktop': ['Motherboard', 'Graphic Card', 'Ram', 'Processors', 'Desktop', 'Computer Case', 'Power Supply'],
-        'Notebook': ['RAM', 'NOTEBOOK FANS', 'NOTEBOOK ( LAPTOPS )', 'NOTEBOOK CASE', 'NOTEBOOK STORAGE', 'NOTEBOOK MSI', 'GeForce RTX 30 Series', 'Laptop Chargers & Adapters'],
-        'Storage': ['External Hard', 'Internal Hard', 'SSD', 'M.2', 'External SSD', 'Memory Card', 'Flash Disk', 'Storage Accessories'],
-        'Monitors': ['Monitors'],
-        'Network': ['Router', 'Switch', 'Wireless USB Adapter', 'Access Point'],
-        'Accessories': ['PC Cooling', 'Keyboards', 'Headphones', 'Keyboard & Mouse COMBO', 'Mouse Pad', 'PC Game Controllers', 'Speaker', 'microphones', 'PRESENTER', 'Chair', 'Webcam', 'CABLE', 'Fans', 'Thermal Paste', 'HOLDER', 'PUNGEE', 'Gaming Desk', 'Mouse', 'Capture box', 'Scales', 'Battary', 'LED strips'],
-        'Bundles': ['POWERED BY ASUS', 'HERO', 'BUNDLES', 'PANDA', 'FIGHTER', 'Dragon', 'NINJA', 'JINX'],
-        'Other': ['Projector', 'Camera', 'Printer', 'Scanner', 'DVD'],
-        'Tools': ['Tools'],
-        'Printer Ink & Toner': ['Laser Cartridge'],
-        'P.O.S System': ['Cashier Printer', 'Barcode Printer', 'Cashier & Barcode Roll', 'Barcode Scanner'],
-        'GAMING CONSOLES': ['Sony PlayStation', 'PS5 Accessories', 'Xbox', 'Xbox Accessories'],
-        'T.V': ['T.V'],
-        'Tablet': ['Tablet'],
-        'software': ['software'],
-        'MOBILE ACCESSORIES': ['wrist watch', 'Power Bank', 'Adapter / Cable'],
-        'MOUSE ACCESSORIES': ['FEET', 'GRIP'],
-        'Media Equipment': ['Media Equipment'],
-        'Powered by ASUS': ['Powered by ASUS']
+    {'base_url': 'https://www.elnekhelytechnology.com', 'store_name': 'Elnekhely Technology', 'categories': {
+        'Motherboard': 'motherboards',
+        'Processor': 'processors',
+        'RAM': 'ram',
+        'SSD': 'ssd',
+        'HDD': 'hdd',
+        'Graphics Card': 'graphics-card',
+        'Cases': 'cases',
+        'Power Supply': 'power-supply',
+        'Fans & Coolers': 'fans-coolers',
+        'Monitors': 'monitors',
+        'Accessories': 'accessories',
+        'Bundles': 'bundeles'
     }},
-    {'base_url': 'https://www.elnekhelytechnology.com', 'store_name': 'Elnekhely Technology', 'categories': base_categories},
     {'base_url': 'https://elbadrgroupeg.store', 'store_name': 'Elbadr Group', 'categories': {
         'Bundles': 'bundles',
         'CPU': 'cpu',
