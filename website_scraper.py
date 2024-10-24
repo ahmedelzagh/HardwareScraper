@@ -14,15 +14,22 @@ class WebsiteScraper:
         max_retries = 3
         retry_delay = 5  # seconds
         last_product_count = 0
+        consecutive_timeouts = 0
+        max_consecutive_timeouts = 3  # Stop after 3 consecutive timeouts
 
         while True:
             for attempt in range(max_retries):
                 response = requests.get(f"{subcategory_url}?page={page}")
                 if response.status_code == 200:
+                    consecutive_timeouts = 0  # Reset timeout counter on success
                     break
                 elif response.status_code == 524:
                     print(f"Timeout error on {subcategory_url}?page={page}. Retrying in {retry_delay} seconds...")
                     time.sleep(retry_delay)
+                    consecutive_timeouts += 1
+                    if consecutive_timeouts >= max_consecutive_timeouts:
+                        print(f"Stopping due to {max_consecutive_timeouts} consecutive timeouts on {subcategory_url}?page={page}")
+                        return products
                 else:
                     print(f"Failed to load {subcategory_url}?page={page} with status code {response.status_code}")
                     return products
