@@ -8,13 +8,13 @@ base_categories = {
     'RAM': 'ram',
     'SSD': 'ssd',
     'HDD': 'hdd',
-    'Graphics Card': 'graphics-cards',
+    'Graphics Card': 'graphics-card',
     'Cases': 'cases',
     'Power Supply': 'power-supply',
     'Fans & Coolers': 'fans-coolers',
     'Monitors': 'monitors',
     'Accessories': 'accessories',
-    'Bundles': 'bundles'
+    'Bundles': 'bundeles'
 }
 
 websites = [
