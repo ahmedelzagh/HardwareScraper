@@ -13,6 +13,7 @@ class WebsiteScraper:
         page = 1
         max_retries = 3
         retry_delay = 5  # seconds
+        last_product_count = 0
 
         while True:
             for attempt in range(max_retries):
@@ -44,11 +45,11 @@ class WebsiteScraper:
                     print(f"Error processing item on {subcategory_url}?page={page}: {e}")
                     continue
 
-            # Check if there is a next page link/button
-            next_page = soup.find('a', {'rel': 'next'})
-            if not next_page:
+            # Check if the number of products has increased
+            if len(products) == last_product_count:
                 break
 
+            last_product_count = len(products)
             page += 1
 
         return products
