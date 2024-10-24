@@ -1,4 +1,5 @@
 # HardwareScraper
+
 **HardwareScraper** is a specialized web scraping tool designed to extract product information from multiple hardware and computer e-commerce websites with varying HTML structures. The project is modularized to easily add new websites and handle different HTML layouts, making it a robust solution for aggregating hardware product data.
 
 ## Features
@@ -18,12 +19,14 @@
 ## Installation
 
 1. Clone the repository:
+
     ```sh
     git clone https://github.com/ahmedelzagh/HardwareScraper.git
     cd HardwareScraper
     ```
 
 2. Install the required dependencies:
+
     ```sh
     pip install -r requirements.txt
     ```
@@ -33,6 +36,7 @@
 1. Update the `websites` list in `main.py` to include the websites you want to scrape.
 
 2. Run the scraping process:
+
     ```sh
     python main.py
     ```
