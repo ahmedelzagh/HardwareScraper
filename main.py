@@ -5,6 +5,7 @@ import time
 
 # Base URL for categories
 base_url = 'https://sigma-computer.com/subcategory'
+store_name = 'Sigma Computer'
 
 # List of categories and subcategories
 categories = {
@@ -77,6 +78,7 @@ def scrape_products(subcategory_url):
                 'price': price,
                 'image_url': image_url,
                 'stock_status': stock_status,
+                'store_name': store_name
             })
 
         page += 1
@@ -109,7 +111,7 @@ scraped_data = scrape_all_categories()
 df = pd.DataFrame(scraped_data)
 
 # Reorder the DataFrame columns
-df = df[['category', 'subcategory', 'name', 'product_url', 'price', 'image_url', 'stock_status']]
+df = df[['category', 'subcategory', 'name', 'product_url', 'price', 'image_url', 'stock_status', 'store_name']]
 
 # Save the DataFrame to an Excel file
 df.to_excel('scraped_products.xlsx', index=False)
