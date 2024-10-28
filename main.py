@@ -31,6 +31,27 @@ websites = [
         'Power Supply': 'power-supply',
         'Accessories': ['Chairs', 'DVD', 'Flash Memory', 'Game PAD', 'Headphones'],
         'Laptop': 'Laptop',
+    }},
+    {'base_url': 'https://sigma-computer.com', 'store_name': 'Sigma Computer', 'categories': {
+        'Desktop': {
+            'Motherboard': {'id': 1, 'id2': 1},
+            'Graphic Card': {'id': 1, 'id2': 2},
+            'Ram': {'id': 1, 'id2': 3},
+            'Processors': {'id': 1, 'id2': 4},
+            'Desktop': {'id': 1, 'id2': 28},
+            'Computer Case': {'id': 1, 'id2': 29},
+            'Power Supply': {'id': 1, 'id2': 61},
+        },
+        'Notebook': {
+            'RAM': {'id': 2, 'id2': 37},
+            'NOTEBOOK FANS': {'id': 2, 'id2': 38},
+            'NOTEBOOK ( LAPTOPS )': {'id': 2, 'id2': 40},
+            'NOTEBOOK CASE': {'id': 2, 'id2': 41},
+            'NOTEBOOK STORAGE': {'id': 2, 'id2': 46},
+            'NOTEBOOK MSI': {'id': 2, 'id2': 68},
+            'GeForce RTX 30 Series': {'id': 2, 'id2': 76},
+            'Laptop Chargers & Adapters': {'id': 2, 'id2': 88},
+        }
     }}
 ]
 
@@ -40,7 +61,20 @@ def scrape_website(base_url, store_name, categories):
     seen_urls = set()
 
     for category, subcategories in categories.items():
-        if isinstance(subcategories, list):
+        if isinstance(subcategories, dict):
+            for subcategory, ids in subcategories.items():
+                subcategory_url = f'{base_url}/subcategory?id={ids["id"]}&id2={ids["id2"]}'
+                print(f"Scraping {subcategory_url} for {store_name}")
+                products = scraper.scrape_products(subcategory_url, store_name)
+
+                for product in products:
+                    product_url = product['product_url']
+                    if product_url not in seen_urls:
+                        product['category'] = category
+                        product['subcategory'] = subcategory
+                        all_products.append(product)
+                        seen_urls.add(product_url)
+        elif isinstance(subcategories, list):
             for subcategory in subcategories:
                 subcategory_url = f'{base_url}/{category.lower().replace(" ", "-")}/{subcategory.lower().replace(" ", "-")}'
                 print(f"Scraping {subcategory_url} for {store_name}")

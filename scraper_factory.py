@@ -1,5 +1,6 @@
 from elnekhely_technology_scraper import ElnekhelyTechnologyScraper
 from elbadr_group_scraper import ElbadrGroupScraper
+from sigma_computer_scraper import SigmaComputerScraper
 
 class ScraperFactory:
     @staticmethod
@@ -8,5 +9,7 @@ class ScraperFactory:
             return ElnekhelyTechnologyScraper(base_url, store_name, categories)
         elif store_name == 'Elbadr Group':
             return ElbadrGroupScraper(base_url, store_name, categories)
+        elif store_name == 'Sigma Computer':
+            return SigmaComputerScraper(base_url, store_name, categories)
         else:
             raise ValueError(f"No scraper available for store: {store_name}")
