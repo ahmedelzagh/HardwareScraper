@@ -29,36 +29,42 @@ websites = [
         'VGA': 'vga',
         'Cooling': 'cooling',
         'Power Supply': 'power-supply',
-        'Accessories': ['Chairs', 'DVD', 'Flash Memory', 'Game PAD', 'Headphones', 'Laptop']
+        'Accessories': ['Chairs', 'DVD', 'Flash Memory', 'Game PAD', 'Headphones'],
+        'Laptop': 'Laptop',
     }}
 ]
 
 def scrape_website(base_url, store_name, categories):
     scraper = ScraperFactory.get_scraper(base_url, store_name, categories)
     all_products = []
+    seen_urls = set()
 
     for category, subcategories in categories.items():
         if isinstance(subcategories, list):
             for subcategory in subcategories:
-                subcategory_url = f'{base_url}?id=1&cname={category}&id2=1&scname={subcategory.replace(" ", "%20")}'
+                subcategory_url = f'{base_url}/{category.lower().replace(" ", "-")}/{subcategory.lower().replace(" ", "-")}'
                 print(f"Scraping {subcategory_url} for {store_name}")
                 products = scraper.scrape_products(subcategory_url, store_name)
 
                 for product in products:
-                    product['category'] = category
-                    product['subcategory'] = subcategory
-
-                all_products.extend(products)
+                    product_url = product['product_url']
+                    if product_url not in seen_urls:
+                        product['category'] = category
+                        product['subcategory'] = subcategory
+                        all_products.append(product)
+                        seen_urls.add(product_url)
         else:
             subcategory_url = f'{base_url}/{subcategories}'
             print(f"Scraping {subcategory_url} for {store_name}")
             products = scraper.scrape_products(subcategory_url, store_name)
 
             for product in products:
-                product['category'] = category
-                product['subcategory'] = subcategories
-
-            all_products.extend(products)
+                product_url = product['product_url']
+                if product_url not in seen_urls:
+                    product['category'] = category
+                    product['subcategory'] = subcategories
+                    all_products.append(product)
+                    seen_urls.add(product_url)
 
     return all_products
 
