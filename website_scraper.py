@@ -10,15 +10,15 @@ class WebsiteScraper:
 
     def scrape_products(self, subcategory_url, website):
         products = []
+        seen_urls = set()
         page = 1
         max_retries = 3
         retry_delay = 5  # seconds
         last_product_count = 0
         consecutive_timeouts = 0
         max_consecutive_timeouts = 3  # Stop after 3 consecutive timeouts
-        max_pages = 20  # Set a maximum number of pages to scrape
 
-        while page <= max_pages:
+        while True:
             for attempt in range(max_retries):
                 try:
                     print(f"Requesting {subcategory_url}?page={page}")
@@ -54,7 +54,10 @@ class WebsiteScraper:
             for item in product_items:
                 try:
                     product = self.extract_product_details(item, website)
-                    products.append(product)
+                    product_url = product['product_url']
+                    if product_url not in seen_urls:
+                        products.append(product)
+                        seen_urls.add(product_url)
                 except AttributeError as e:
                     print(f"Error processing item on {subcategory_url}?page={page}: {e}")
                     continue
