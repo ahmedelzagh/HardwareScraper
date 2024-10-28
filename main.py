@@ -25,7 +25,7 @@ websites = [
         'Cases': 'cases',
         'Hard': ['External', 'Internal'],
         'SSD': 'ssd',
-        'Monitors': ['4K / 2K Monitors', 'Curved Monitors', 'Gaming Monitors'],
+        'Monitors': ['4K-2K-Monitors', 'Curved Monitors', 'Gaming Monitors'],
         'VGA': 'vga',
         'Cooling': 'cooling',
         'Power Supply': 'power-supply',
