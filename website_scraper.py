@@ -1,6 +1,11 @@
 import requests
 from bs4 import BeautifulSoup
 import time
+import logging
+
+# Configure logging
+logging.basicConfig(filename='scraper_errors.log', level=logging.ERROR,
+                    format='%(asctime)s:%(levelname)s:%(message)s')
 
 class WebsiteScraper:
     def __init__(self, base_url, store_name, categories):
@@ -34,10 +39,14 @@ class WebsiteScraper:
                             print(f"Stopping due to {max_consecutive_timeouts} consecutive timeouts on {subcategory_url}?page={page}")
                             return products
                     else:
-                        print(f"Failed to load {subcategory_url}?page={page} with status code {response.status_code}")
+                        error_message = f"Failed to load {subcategory_url}?page={page} with status code {response.status_code}"
+                        print(error_message)
+                        logging.error(error_message)
                         return products
                 except requests.exceptions.RequestException as e:
-                    print(f"Request exception on {subcategory_url}?page={page}: {e}")
+                    error_message = f"Request exception on {subcategory_url}?page={page}: {e}"
+                    print(error_message)
+                    logging.error(error_message)
                     time.sleep(retry_delay)
                     continue
 
@@ -59,7 +68,9 @@ class WebsiteScraper:
                         products.append(product)
                         seen_urls.add(product_url)
                 except AttributeError as e:
-                    print(f"Error processing item on {subcategory_url}?page={page}: {e}")
+                    error_message = f"Error processing item on {subcategory_url}?page={page}: {e}"
+                    print(error_message)
+                    logging.error(error_message)
                     continue
 
             # Check if the number of products has increased
